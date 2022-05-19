@@ -1,15 +1,15 @@
-import { BillingType } from "../types/Billing";
+import { InvalidDataResponse } from "../types/InvalidDataResponse";
 import { InvoiceDataType } from "../types/InvoiceData";
 
 export const getInvoice = (
-  data: InvoiceDataType,
-  billingType: BillingType,
+  billingType: string,
   onSuccess: (blob: Blob) => void,
-  onError: (error: any) => void
+  onError: (error: InvalidDataResponse) => void,
+  data?: InvoiceDataType
 ) => {
-  const url = `${process.env.REACT_APP_API}/?template=${billingType}`;
+  const url = `https://don-invoice-generator.herokuapp.com/?template=${billingType}`;
   try {
-    const res = fetch(url, {
+    fetch(url, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -26,17 +26,3 @@ export const getInvoice = (
     return e;
   }
 };
-
-getInvoice(
-  {
-    invoiceNum: "1/2022",
-    date: "04-05-2022",
-    currentMonth: "MARZO",
-    netAmount: "2555",
-  },
-  "Apophis_Contacts",
-  (doc) => {
-    "lavora Blob";
-  },
-  (error) => {}
-);

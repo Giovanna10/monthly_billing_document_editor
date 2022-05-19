@@ -1,0 +1,11 @@
+.textField {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  gap: 10px;
+  width: 70%;
+}
+
+label {
+  text-align: left;
+}
