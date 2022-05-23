@@ -4,7 +4,7 @@ import { InvoiceDataType } from "../types/InvoiceData";
 
 export const useInvoice = () => {
   const [invoiceLink, setInvoiceLink] = useState<string>();
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>();
   const createInvoice = useCallback(
     (billingType: string, invoiceData?: InvoiceDataType) => {
       getInvoice(
@@ -12,18 +12,23 @@ export const useInvoice = () => {
         (blob) => {
           const blobUrl = URL.createObjectURL(blob);
           setInvoiceLink(blobUrl);
+          setErrors(undefined);
         },
         (error) => {
-          const issue = error.issues.reduce((issueMessage, issue) => {
-            issueMessage = `${issue.message} for ${issue.path.toString()}`;
-            return issueMessage;
-          }, "");
-          setErrorMessage(issue);
+          const issues = error.issues.reduce<{ [key: string]: string }>(
+            (issueKeyValue, issue) => {
+              issueKeyValue[issue.path[0]] = issue.message;
+              return issueKeyValue;
+            },
+            {}
+          );
+
+          setErrors(issues);
         },
-        invoiceData,
+        invoiceData
       );
     },
     []
   );
-  return { createInvoice, invoiceLink, errorMessage };
+  return { createInvoice, invoiceLink, errors };
 };

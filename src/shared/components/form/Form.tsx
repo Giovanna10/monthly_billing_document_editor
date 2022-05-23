@@ -10,7 +10,7 @@ export const Form: FC = () => {
   const [invoiceData, setInvoiceData] = useState<InvoiceDataType>();
   const [companyName, setCompanyName] = useState<string>("Apophis_Contacts");
 
-  const { errorMessage } = useInvoice();
+  const { errors, createInvoice, invoiceLink } = useInvoice();
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,12 +24,10 @@ export const Form: FC = () => {
     },
     []
   );
-
-  console.log({ errorMessage });
-
   const handleSelect = ({
     currentTarget: { value },
   }: React.ChangeEvent<HTMLSelectElement>) => setCompanyName(value);
+
   return (
     <div className="form">
       <Select handleChange={handleSelect} />
@@ -57,7 +55,8 @@ export const Form: FC = () => {
         placeholder="Inserisci compenso"
         handleChange={handleChange}
       />
-      <SubmitButton invoiceData={invoiceData} companyName={companyName} />
+      <SubmitButton onClick={() => createInvoice(companyName, invoiceData)} />
+      {invoiceLink ? <a href={invoiceLink}>Scarica Fattura</a> : null}
     </div>
   );
 };

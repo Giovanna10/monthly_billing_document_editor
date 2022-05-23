@@ -1,16 +1,12 @@
 import { FC } from "react";
-import { useInvoice } from "../../hooks/useInvoice";
-import { InvoiceDataType } from "../../types/InvoiceData";
 
 type SubmitProps = {
-  invoiceData?: InvoiceDataType;
-  companyName: string;
+  onClick: () => void;
 };
 
-export const SubmitButton: FC<SubmitProps> = ({ invoiceData, companyName }) => {
-  const { createInvoice } = useInvoice();
+export const SubmitButton: FC<SubmitProps> = ({ onClick }) => {
   return (
-    <button onClick={() => createInvoice(companyName, invoiceData)}>
+    <button onClick={onClick}>
       Crea
     </button>
   );

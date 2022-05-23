@@ -1,6 +1,6 @@
-export type InvoiceDataType = {
-  invoiceNum?: string;
-  date?: string;
-  currentMonth?: string;
-  netAmount?: string;
-};
+export type InvoiceDataType = Partial<{
+  invoiceNum: string;
+  date: string;
+  currentMonth: string;
+  netAmount: string;
+}>;
