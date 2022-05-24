@@ -1,11 +1,12 @@
 import { FC } from "react";
-import './Input.css'
+import "./Input.css";
 
 type InputProps = {
   label: string;
   name: string;
   placeholder: string;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
 };
 
 export const Input: FC<InputProps> = ({
@@ -13,6 +14,7 @@ export const Input: FC<InputProps> = ({
   name,
   placeholder,
   handleChange,
+  error,
 }) => {
   return (
     <div className="textField">
@@ -23,6 +25,7 @@ export const Input: FC<InputProps> = ({
         placeholder={placeholder}
         onChange={handleChange}
       />
+      <div className="error">{error && "Inserisci il valore"}</div>
     </div>
   );
 };

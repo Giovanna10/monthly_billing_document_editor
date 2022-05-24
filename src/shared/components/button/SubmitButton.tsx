@@ -1,4 +1,5 @@
 import { FC } from "react";
+import './SubmitButton.css'
 
 type SubmitProps = {
   onClick: () => void;
@@ -6,8 +7,8 @@ type SubmitProps = {
 
 export const SubmitButton: FC<SubmitProps> = ({ onClick }) => {
   return (
-    <button onClick={onClick}>
-      Crea
-    </button>
+    <div className="submit">
+      <button onClick={onClick}>Crea</button>
+    </div>
   );
 };
