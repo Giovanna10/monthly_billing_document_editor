@@ -3,15 +3,17 @@ import "./Select.css";
 
 type SelectProps = {
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options?: string[];
+  name: string;
 };
 
-export const Select: FC<SelectProps> = ({ handleChange }) => {
+export const Select: FC<SelectProps> = ({ handleChange, options, name }) => {
   return (
     <div className="select">
-      <label htmlFor="company">Nome Azienda</label>
-      <select id="company" onChange={handleChange} title="company">
-        <option>Apophis_Contacts</option>
-        <option>Digital_Center</option>
+      <select id={name} name={name} onChange={handleChange} title={name}>
+        {options?.map((option) => (
+          <option>{option}</option>
+        ))}
       </select>
     </div>
   );

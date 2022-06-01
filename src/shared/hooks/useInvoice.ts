@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { getInvoice } from "../api/getInvoice";
-import { InvoiceDataType } from "../types/InvoiceData";
+import { InvoiceDataType } from "../types";
 
 export const useInvoice = () => {
   const [invoiceLink, setInvoiceLink] = useState<string>();
@@ -22,7 +22,6 @@ export const useInvoice = () => {
             },
             {}
           );
-
           setErrors(issues);
         },
         invoiceData

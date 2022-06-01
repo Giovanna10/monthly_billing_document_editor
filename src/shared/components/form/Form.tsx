@@ -1,9 +1,8 @@
 import { FC, useCallback, useState } from "react";
 import { useInvoice } from "../../hooks/useInvoice";
-import { InvoiceDataType } from "../../types/InvoiceData";
+import { InvoiceDataType } from "../../types";
 import { SubmitButton } from "../button/SubmitButton";
 import Input from "../input";
-import { Select } from "../select/Select";
 import "./Form.css";
 import { inputs } from "./inputs";
 
@@ -16,10 +15,17 @@ export const Form: FC = () => {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.currentTarget) {
-        const { name, value } = event.currentTarget;
+        const { type, name, value, valueAsNumber, valueAsDate } =
+          event.currentTarget;
         setInvoiceData((prev) => ({
           ...prev,
-          [name]: value,
+          [name]:
+            type === "number"
+              ? valueAsNumber
+              : type === ""
+              ? valueAsDate
+              : value,
+          currentMonth: "Gennaio",
         }));
       }
     },
@@ -27,19 +33,26 @@ export const Form: FC = () => {
   );
 
   const handleSelect = ({
-    currentTarget: { value },
-  }: React.ChangeEvent<HTMLSelectElement>) => setCompanyName(value);
+    currentTarget,
+  }: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = currentTarget;
+    setCompanyName((prev) => (name === "company" ? value : prev));
+    setInvoiceData((prev) => ({ ...prev, [name]: value }));
+  };
 
   return (
     <div className="form">
-      <Select handleChange={handleSelect} />
-      {inputs.map(({ key, label, placeholder }) => {
+      {inputs.map(({ key, label, inputType, type, options, placeholder }) => {
         return (
           <Input
             label={label}
             name={key}
+            inputType={inputType}
+            type={type}
+            options={options}
             placeholder={placeholder}
             handleChange={handleChange}
+            handleSelect={handleSelect}
             error={errors?.[key]}
           />
         );
