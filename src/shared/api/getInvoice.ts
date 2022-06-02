@@ -1,5 +1,4 @@
-import { InvalidDataResponse } from "../types/InvalidDataResponse";
-import { InvoiceDataType } from "../types/InvoiceData";
+import { InvalidDataResponse, InvoiceDataType } from "../types";
 
 export const getInvoice = (
   billingType: string,
