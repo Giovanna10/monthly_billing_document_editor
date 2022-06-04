@@ -7,10 +7,15 @@ import "./Form.css";
 import { inputs } from "./inputs";
 
 export const Form: FC = () => {
-  const [invoiceData, setInvoiceData] = useState<InvoiceDataType>();
+  const [invoiceData, setInvoiceData] = useState<InvoiceDataType>({
+    invoiceNum: "",
+    date: new Date().toLocaleDateString(),
+    currentMonth: "Gennaio",
+    netAmount: "",
+  });
   const [companyName, setCompanyName] = useState<string>("Apophis_Contacts");
 
-  const { createInvoice, invoiceLink, errors } = useInvoice();
+  const { createInvoice, errors } = useInvoice();
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +30,6 @@ export const Form: FC = () => {
               : type === ""
               ? valueAsDate
               : value,
-          currentMonth: "Gennaio",
         }));
       }
     },
@@ -45,6 +49,7 @@ export const Form: FC = () => {
       {inputs.map(({ key, label, inputType, type, options, placeholder }) => {
         return (
           <Input
+            key={key}
             label={label}
             name={key}
             inputType={inputType}
@@ -58,7 +63,6 @@ export const Form: FC = () => {
         );
       })}
       <SubmitButton onClick={() => createInvoice(companyName, invoiceData)} />
-      {invoiceLink ? <a href={invoiceLink}>Scarica Fattura</a> : null}
     </div>
   );
 };
