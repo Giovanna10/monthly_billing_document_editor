@@ -1,18 +1,16 @@
 import { useCallback, useState } from "react";
 import { getInvoice } from "../api/getInvoice";
 import { InvoiceDataType } from "../types";
+import { saveAs } from "file-saver";
 
 export const useInvoice = () => {
-  const [invoiceLink, setInvoiceLink] = useState<string>();
   const [errors, setErrors] = useState<{ [key: string]: string }>();
   const createInvoice = useCallback(
     (billingType: string, invoiceData?: InvoiceDataType) => {
       getInvoice(
         billingType,
         (blob) => {
-          const blobUrl = URL.createObjectURL(blob);
-          setInvoiceLink(blobUrl);
-          setErrors(undefined);
+          saveAs(blob, "Fattura.docx");
         },
         (error) => {
           const issues = error.issues.reduce<{ [key: string]: string }>(
@@ -29,5 +27,5 @@ export const useInvoice = () => {
     },
     []
   );
-  return { createInvoice, invoiceLink, errors };
+  return { createInvoice, errors };
 };

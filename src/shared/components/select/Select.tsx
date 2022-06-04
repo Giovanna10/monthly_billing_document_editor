@@ -12,7 +12,7 @@ export const Select: FC<SelectProps> = ({ handleChange, options, name }) => {
     <div className="select">
       <select id={name} name={name} onChange={handleChange} title={name}>
         {options?.map((option) => (
-          <option>{option}</option>
+          <option key={option}>{option}</option>
         ))}
       </select>
     </div>
