@@ -1,68 +1,118 @@
-import { FC, useCallback, useState } from "react";
+import {
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { FC, useState } from "react";
 import { useInvoice } from "../../hooks/useInvoice";
-import { InvoiceDataType } from "../../types";
-import { SubmitButton } from "../button/SubmitButton";
-import Input from "../input";
 import "./Form.css";
-import { inputs } from "./inputs";
 
 export const Form: FC = () => {
-  const [invoiceData, setInvoiceData] = useState<InvoiceDataType>({
-    invoiceNum: "",
-    date: new Date().toLocaleDateString(),
-    currentMonth: "Gennaio",
-    netAmount: "",
-  });
-  const [companyName, setCompanyName] = useState<string>("Apophis_Contacts");
-
   const { createInvoice, errors } = useInvoice();
-
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.currentTarget) {
-        const { type, name, value, valueAsNumber, valueAsDate } =
-          event.currentTarget;
-        setInvoiceData((prev) => ({
-          ...prev,
-          [name]:
-            type === "number"
-              ? valueAsNumber
-              : type === ""
-              ? valueAsDate
-              : value,
-        }));
-      }
-    },
-    []
-  );
-
-  const handleSelect = ({
-    currentTarget,
-  }: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = currentTarget;
-    setCompanyName((prev) => (name === "company" ? value : prev));
-    setInvoiceData((prev) => ({ ...prev, [name]: value }));
-  };
+  const [date, setDate] = useState<Date>(new Date());
 
   return (
-    <div className="form">
-      {inputs.map(({ key, label, inputType, type, options, placeholder }) => {
-        return (
-          <Input
-            key={key}
-            label={label}
-            name={key}
-            inputType={inputType}
-            type={type}
-            options={options}
-            placeholder={placeholder}
-            handleChange={handleChange}
-            handleSelect={handleSelect}
-            error={errors?.[key]}
+    <form
+      onSubmit={(event) => {
+        const data = new FormData(event.currentTarget);
+        event.preventDefault();
+        createInvoice(data.get("company"), {
+          invoiceNum: data.get("invoiceNum")?.toString(),
+          currentMonth: data.get("currentMonth")?.toString(),
+          date: data.get("date")?.toString(),
+          netAmount: Number(data.get("netAmount")),
+        });
+      }}
+    >
+      <Grid container spacing={4}>
+        <Grid item xs={8}>
+          <FormControl variant="outlined">
+            <InputLabel id="demo-simple-select-outlined-label">
+              Azienda
+            </InputLabel>
+            <Select
+              defaultValue="Apophis_Contacts"
+              id="demo-simple-select-outlined"
+              name="company"
+              label="Azienda"
+            >
+              <MenuItem value="Apophis_Contacts">Apophis_Contacts</MenuItem>
+              <MenuItem value="Digital_Center">Digital_Center</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={8}>
+          <TextField
+            id="outlined-basic"
+            variant="outlined"
+            name="invoiceNum"
+            label="Codice fattura"
+            type="text"
+            placeholder="Inserisci codice"
+            error={!!errors.invoiceNum}
+            helperText={errors.invoiceNum}
           />
-        );
-      })}
-      <SubmitButton onClick={() => createInvoice(companyName, invoiceData)} />
-    </div>
+        </Grid>
+        <Grid item xs={8}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Data compilazione"
+              InputProps={{ name: "date" }}
+              value={date}
+              onChange={(value) => setDate(value ?? new Date())}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={8}>
+          <FormControl variant="outlined">
+            <InputLabel id="demo-simple-select-outlined-label">Mese</InputLabel>
+            <Select
+              id="demo-simple-select-outlined"
+              name="currentMonth"
+              label="Mese di riferimento"
+              defaultValue="Gennaio"
+            >
+              <MenuItem value="Gennaio">Gennaio</MenuItem>
+              <MenuItem value="Febbraio">Febbraio</MenuItem>
+              <MenuItem value="Marzo">Marzo</MenuItem>
+              <MenuItem value="Aprile">Aprile</MenuItem>
+              <MenuItem value="Maggio">Maggio</MenuItem>
+              <MenuItem value="Giugno">Giugno</MenuItem>
+              <MenuItem value="Luglio">Luglio</MenuItem>
+              <MenuItem value="Agosto">Agosto</MenuItem>
+              <MenuItem value="Settembre">Settembre</MenuItem>
+              <MenuItem value="Ottobre">Ottobre</MenuItem>
+              <MenuItem value="Novembre">Novembre</MenuItem>
+              <MenuItem value="Dicembre">Dicembre</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={8}>
+          <TextField
+            id="outlined-basic"
+            variant="outlined"
+            name="netAmount"
+            label="Compenso netto"
+            type="number"
+            inputProps={{ inputMode: "numeric" }}
+            placeholder="Inserisci compenso"
+            error={!!errors.netAmount}
+            helperText={errors.netAmount}
+          />
+        </Grid>
+        <Grid item xs={8}>
+          <Button variant="outlined" formAction="submit" type="submit">
+            Crea fattura
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
   );
 };
