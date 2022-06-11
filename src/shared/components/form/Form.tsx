@@ -108,7 +108,6 @@ export const Form: FC = () => {
                   name="netAmount"
                   label="Compenso netto"
                   type="text"
-                  inputProps={{ inputMode: "numeric" }}
                   placeholder="Inserisci compenso"
                   error={!!errors.netAmount}
                   helperText={errors.netAmount}
