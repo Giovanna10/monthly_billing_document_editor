@@ -4,6 +4,7 @@ import { InvoiceDataType } from "../types";
 import { saveAs } from "file-saver";
 
 export const useInvoice = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const createInvoice = useCallback(
     (billingType: unknown, invoiceData: InvoiceDataType) => {
@@ -11,6 +12,7 @@ export const useInvoice = () => {
         billingType,
         (blob) => {
           setErrors({});
+          setIsLoading(!blob);
           saveAs(blob, "Fattura.docx");
         },
         (error) => {
@@ -24,7 +26,6 @@ export const useInvoice = () => {
             },
             {}
           );
-
           setErrors(issues);
         },
         invoiceData
@@ -32,5 +33,5 @@ export const useInvoice = () => {
     },
     []
   );
-  return { createInvoice, errors };
+  return { createInvoice, errors, isLoading };
 };
