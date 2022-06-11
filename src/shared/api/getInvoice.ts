@@ -13,7 +13,7 @@ export const getInvoice = (
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify({ ...data, netAmount: Number(data?.netAmount) }),
+      body: data ? JSON.stringify(data) : undefined,
     }).then(async (response) => {
       if (response.status === 400) {
         onError(await response.json());
