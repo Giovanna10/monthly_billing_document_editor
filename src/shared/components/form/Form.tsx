@@ -15,6 +15,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FC, useState } from "react";
 import { useInvoice } from "../../hooks/useInvoice";
 import "./Form.css";
+import { months } from "./months";
 
 export const Form: FC = () => {
   const { createInvoice, errors, isLoading } = useInvoice();
@@ -31,7 +32,7 @@ export const Form: FC = () => {
               invoiceNum: data.get("invoiceNum")?.toString(),
               currentMonth: data.get("currentMonth")?.toString(),
               date: data.get("date")?.toString(),
-              netAmount: Number(data.get("netAmount")),
+              netAmount: data.get("netAmount")?.toString(),
             });
           }}
         >
@@ -62,6 +63,7 @@ export const Form: FC = () => {
                   name="invoiceNum"
                   label="Codice fattura"
                   type="text"
+                  inputProps={{ inputMode: "numeric" }}
                   placeholder="Inserisci codice"
                   error={!!errors.invoiceNum}
                   helperText={errors.invoiceNum}
@@ -90,20 +92,13 @@ export const Form: FC = () => {
                     id="demo-simple-select-outlined"
                     name="currentMonth"
                     label="Mese"
-                    defaultValue="Gennaio"
+                    defaultValue={months[date.getMonth()]}
                   >
-                    <MenuItem value="Gennaio">Gennaio</MenuItem>
-                    <MenuItem value="Febbraio">Febbraio</MenuItem>
-                    <MenuItem value="Marzo">Marzo</MenuItem>
-                    <MenuItem value="Aprile">Aprile</MenuItem>
-                    <MenuItem value="Maggio">Maggio</MenuItem>
-                    <MenuItem value="Giugno">Giugno</MenuItem>
-                    <MenuItem value="Luglio">Luglio</MenuItem>
-                    <MenuItem value="Agosto">Agosto</MenuItem>
-                    <MenuItem value="Settembre">Settembre</MenuItem>
-                    <MenuItem value="Ottobre">Ottobre</MenuItem>
-                    <MenuItem value="Novembre">Novembre</MenuItem>
-                    <MenuItem value="Dicembre">Dicembre</MenuItem>
+                    {months.map((month) => (
+                      <MenuItem key={month} value={month}>
+                        {month}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -113,7 +108,7 @@ export const Form: FC = () => {
                   variant="outlined"
                   name="netAmount"
                   label="Compenso netto"
-                  type="number"
+                  type="text"
                   inputProps={{ inputMode: "numeric" }}
                   placeholder="Inserisci compenso"
                   error={!!errors.netAmount}
