@@ -63,7 +63,6 @@ export const Form: FC = () => {
                   name="invoiceNum"
                   label="Codice fattura"
                   type="text"
-                  inputProps={{ inputMode: "numeric" }}
                   placeholder="Inserisci codice"
                   error={!!errors.invoiceNum}
                   helperText={errors.invoiceNum}
